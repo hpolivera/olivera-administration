@@ -150,7 +150,7 @@ export default function Form({ receipt, property, bankAccount }: { receipt: Rece
   }
 
     // Guardar el archivo PDF
-    doc.save(`${property.name}-rec${formatYearMonth(receipt.rental_period_start)}.pdf`);
+    doc.save(`${property.name}-rec-${formatYearMonth(receipt.rental_period_start)}.pdf`);
   };
 
   return (

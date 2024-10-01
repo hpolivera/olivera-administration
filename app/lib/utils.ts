@@ -42,12 +42,20 @@ export const formatMonthYear = (dateStr: string) => {
   return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 };
 
-// Format date to be displayed in the format "year-month" (e.g. "2022-01")
+// Format date to be displayed in the format "yearmonth" (e.g. "202201")
 export const formatYearMonth = (dateStr: string) => {
-  const date = new Date(dateStr);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  return `${year}-${month.toString().padStart(2, '0')}`;
+  const date = new Date(dateStr + 'T00:00:00Z'); // Agregar la parte de hora en UTC
+  
+  // Verifica si la fecha es válida
+  if (isNaN(date.getTime())) {
+    throw new Error('Fecha inválida: ' + dateStr);
+  }
+
+  const year = date.getUTCFullYear(); // Obtener el año en UTC
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Obtener el mes en UTC
+  
+  // Devolver el formato YYYYMM
+  return `${year}${month}`;
 };
 
 export const generatePagination = (currentPage: number, totalPages: number) => {
