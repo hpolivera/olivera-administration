@@ -1,5 +1,3 @@
-import { Revenue } from './definitions';
-
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString('en-US', {
     style: 'currency',
@@ -21,18 +19,35 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
-export const generateYAxis = (revenue: Revenue[]) => {
-  // Calculate what labels we need to display on the y-axis
-  // based on highest record and in 1000s
-  const yAxisLabels = [];
-  const highestRecord = Math.max(...revenue.map((month) => month.revenue));
-  const topLabel = Math.ceil(highestRecord / 1000) * 1000;
+export const formatDateToDayMonthYear = (dateStr: string, locale: string = 'es-US') => {
+  const date = new Date(dateStr);
+  const options: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+  };
+  const formatter = new Intl.DateTimeFormat(locale, options);
+  return formatter.format(date);
+}
 
-  for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`$${i / 1000}K`);
-  }
+// Format the date to be displayed in spanish in the format "month year" (e.g. "Enero 2022")
+export const formatMonthYear = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    year: 'numeric',
+  };
+  const formatter = new Intl.DateTimeFormat('es-ES', options);
+  const formattedDate = formatter.format(date);
+  return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+};
 
-  return { yAxisLabels, topLabel };
+// Format date to be displayed in the format "year-month" (e.g. "2022-01")
+export const formatYearMonth = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  return `${year}-${month.toString().padStart(2, '0')}`;
 };
 
 export const generatePagination = (currentPage: number, totalPages: number) => {
